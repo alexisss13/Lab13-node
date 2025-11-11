@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -45,8 +46,31 @@ export default function Dashboard() {
 
           <p className="text-gray-600 mt-1">{session.user?.email}</p>
 
+          {/* Mostrar rol */}
+          <div className="mt-3">
+            <span
+              className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${
+                session.user.role === "admin"
+                  ? "bg-purple-100 text-purple-800"
+                  : "bg-blue-100 text-blue-800"
+              }`}
+            >
+              {session.user.role === "admin" ? "👑 Administrador" : "👤 Usuario"}
+            </span>
+          </div>
+
+          {/* Botón de Admin si es administrador */}
+          {session.user.role === "admin" && (
+            <Link
+              href="/admin"
+              className="mt-4 px-6 py-2 rounded-full bg-purple-500 hover:bg-purple-600 text-white font-semibold transition-all shadow-sm"
+            >
+              Panel de Admin
+            </Link>
+          )}
+
           <button
-            onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: "/login" })}
             className="mt-6 px-6 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold transition-all shadow-sm"
           >
             Cerrar Sesión
